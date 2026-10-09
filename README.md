@@ -1,31 +1,38 @@
-# Study Buddy: frontend
+# Study Buddy - frontend (session 5)
 
-Interface React + TypeScript (Vite) pour le backend `bootcamp-chatbot-backend`.
+Interface React (Vite) : streaming SSE, sélecteur de modèle, notes (`note`), réessai et arrêt du flux.
+
+**Backend** : [TresorAlad/bootcamp-chatbot-backend](https://github.com/TresorAlad/bootcamp-chatbot-backend)
 
 ## Lancer en local
 
-1. Démarrer le backend (port 8000) depuis `bootcamp-chatbot-backend` :
+1. Backend (port **8001** si le 8000 est occupé) :
 
 ```bash
-uv run fastapi dev main.py
+cd bootcamp-chatbot-backend
+uv sync && cp .env.example .env
+uv run alembic upgrade head
+uv run fastapi dev main.py --port 8001
 ```
 
-2. Démarrer le frontend depuis ce dossier :
+2. Frontend :
 
 ```bash
 npm install
 npm run dev
 ```
 
-3. Ouvrir http://localhost:5173.
+3. Ouvrir http://localhost:5173
 
-Les appels vers `/api/*` sont redirigés vers `http://localhost:8000` par le proxy de Vite (`vite.config.ts`), donc pas besoin de configurer CORS côté backend.
+Le proxy Vite envoie `/api/*` vers `http://localhost:8001` (`vite.config.ts`).
 
 ## Endpoints utilisés
 
 | Méthode | Route | Usage |
-| --- | --- | --- |
-| `GET` | `/conversations` | Historique des conversations (barre latérale) |
-| `POST` | `/conversations` | Bouton « Nouvelle conversation » |
-| `GET` | `/conversations/{id}/messages` | Messages d'une conversation |
-| `POST` | `/chat` | Envoi d'un message |
+| ------- | ----- | ----- |
+| GET | /models | Liste des modèles autorisés |
+| GET | /conversations | Barre latérale |
+| POST | /conversations | Nouvelle conversation |
+| GET | /conversations/{id}/messages | Messages du fil |
+| POST | /conversations/{id}/notes | Note personnelle |
+| POST | /chat | Message (flux SSE) |
